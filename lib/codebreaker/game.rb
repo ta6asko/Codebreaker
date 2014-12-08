@@ -1,8 +1,7 @@
 require "codebreaker/version"
 
 module Codebreaker
-  class Game
-    attr_accessor 
+  class Game 
 
     def initialize
       @attemps = 10
@@ -18,7 +17,7 @@ module Codebreaker
         check_hint
         output_hint
         check_input_data
-        user_code_to_a(@user_code)    
+        to_a(@user_code)
         @output.clear
         check_user_code
         if  @win == 1
@@ -81,7 +80,7 @@ module Codebreaker
       end
     end
 
-    def user_code_to_a arg
+    def to_a arg
       @user_code_array = arg.split('').map(&:to_i)       
     end
 
@@ -102,7 +101,7 @@ module Codebreaker
     def check_for_lose
       if @attemps_count == @attemps
         puts "You lose! Secret code - "
-        puts arr_to_s(@secret_code)
+        arr_to_s(@secret_code)
       end
     end
     
@@ -117,11 +116,13 @@ module Codebreaker
     def hint
       hint_array = ['*', '*', '*', '*']
       random = rand(0..3)
-      hint_array[random] = secret_code[random]
-    end
+      hint_array[random] = @secret_code[random]
+      arr_to_s(hint_array)
+    end 
 
     def score key, val
       @score[key] = val+1
+      @score
     end
 
     def saves_score name, attemps, code

@@ -3,6 +3,7 @@ require 'spec_helper'
 module Codebreaker
   describe Game do
     let(:game) { Game.new }
+
     context "#new_game" do
     end
     context "#check_hint" do
@@ -61,6 +62,7 @@ module Codebreaker
         code = game.instance_variable_get(:@user_code)
         expect(code).to eq("1234")
       end
+
       context "#generate_code" do
         it "check is generate array for length" do
           game.generate_code
@@ -80,9 +82,21 @@ module Codebreaker
       end
 
       context "#check_input_data" do
+        after do
+          game.check_input_data
+        end
+
         it "send 'incorrect data' message" do
-          # game.instance_variable_set(:@user_code, 1)
-          # expect(game).to receive(:puts).with("incorrect data")
+          game.instance_variable_set(:@user_code, '123hghg')
+          expect(game).to receive(:puts).with("incorrect data")
+        end
+      end
+
+      context "#to_a" do
+        it "convert user code to array" do
+          game.to_a("1234")
+
+          expect(game.instance_variable_get(:@user_code_array)).to eq([1, 2, 3, 4])
         end
       end
 
@@ -122,99 +136,34 @@ module Codebreaker
           game.check_for_lose
         end
 
-        it "" do
-          # game.instance_variable_set(:@attemps_count, 10)
-          # game.instance_variable_set(:@attemps, 10)
-          # expect(game).to receive(:puts).with("You lose! Secret code - ")
-        end
-
-        it "" do
-          # game.instance_variable_set(:@attemps_count, 10)
-          # game.instance_variable_set(:@attemps, 10)
-          # expect(game).to receive(:puts).with("")
+        it "send 'You lose' message" do
+          game.instance_variable_set(:@attemps_count, 10)
+          game.instance_variable_set(:@attemps, 10)
+          game.stub(:arr_to_s) { "1234" }
+          expect(game).to receive(:puts).with("You lose! Secret code - ")
         end
       end
 
       context "#arr_to_s" do
-        after do
+        it "output string" do
+          expect(game).to receive(:puts).with("1 2 3 4")
           game.arr_to_s([1, 2, 3, 4])
         end
+      end
 
-        it "output secret_code" do
-          # expect(game).to receive(:print).with("1  2  3  4")
-        end
-
-        it "send '' message" do
-          # expect(game).to receive(:puts).with("")
+      context "#hash_to_s" do
+        it "output string" do
+          expect(game).to receive(:puts).with("Jane Doe: 10 attemps")
+          game.hash_to_s({"Jane Doe" => 10})
         end
       end
 
-      context "#hint" do
-        after do
-          game.hint
-        end
-
-        it "" do
-          game.stub(random) { 0 }
-          code = game.instance_variable_set(:@secret_code, ['1', '2', '3', '4'])
-          expect(game.hint).to eq(['1', '*', '*', '*'])
-        end
-
-        it "" do
-          
-        end
-
-        it "" do
-          
-        end
-
-        it "" do
-          
+      context "#score" do
+        it "create score hash" do
+          expect(game.score("Jane Doe", 8)).to eq({"Jane Doe"=>9})
         end
       end
 
-      context "#game" do
-        before do
-          game.stub(:gets) { "1234\n" }
-          game.stub(:new_game) { [1,2,3,4] }
-          game.stub(:check_hint) { '1234' }
-          game.stub(:output_hint) { ['1','*','*','*'] }
-          game.stub(:check_input_data) { '' }
-          game.stub(:user_code_to_a) { [1,2,3,4] }
-          game.stub(:check_user_code) { [1,2,3,4] }
-          game.stub(:hash_to_s) { [1,2,3,4] }
-          game.stub(:saves_score) { [1,2,3,4] }
-          game.stub(:check_for_lose) { [1,2,3,4] }
-        end
-
-        after do
-          game.game
-        end
-
-        it "send 'Please enter your name' message" do
-          expect(game).to receive(:puts).with("Please enter your name")
-        end
-
-        it "check gets.chomp" do
-          game.game
-          code = game.instance_variable_get(:@user_name)
-          expect(code).to eq("1234")
-        end
-
-        it "" do
-          game.instance_variable_set(:@user_code, '1234')
-          code = game.instance_variable_get(:@user_code_array)
-          expect(code).to eq("1234")
-        end
-
-        it "" do
-          game.instance_variable_set(:@win, 1)
-          expect(game).to receive(:puts).with('You win!')
-        end
-
-        it "" do
-        end
-      end
     end
   end  
 end
