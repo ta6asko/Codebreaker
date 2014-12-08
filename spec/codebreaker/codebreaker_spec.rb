@@ -4,8 +4,6 @@ module Codebreaker
   describe Game do
     let(:game) { Game.new }
 
-    context "#new_game" do
-    end
     context "#check_hint" do
       before do
         game.stub(:gets) { "1234\n" }
